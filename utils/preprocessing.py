@@ -10,9 +10,9 @@ lemmatizer = WordNetLemmatizer()
 stemmer = PorterStemmer()
 
 
-VALID_VARIANTS = {"raw", "stop", "stop_lemma", "stop_stem"}
+VALID_VARIANTS = {"normalized", "stop", "stop_lemma", "stop_stem"}
 
-def clean_text(text, variant="raw"):
+def clean_text(text, variant="normalized"):
     if variant not in VALID_VARIANTS:
         raise ValueError(f"Invalid variant '{variant}'. Must be one of {VALID_VARIANTS}.")
 
