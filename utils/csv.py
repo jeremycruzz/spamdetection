@@ -1,12 +1,7 @@
 import csv
+import os
 
 def write_stats_to_csv(stats, filename):
-    """
-    Writes stats to a CSV file, omitting the 'misclassified' field.
-    Always includes: model, variant, accuracy, precision, recall, f1, training_time, roc_auc.
-    Appends rows if file exists, using model/variant as primary key.
-    """
-    import os
     keys = ['model', 'variant', 'accuracy', 'precision', 'recall', 'f1', 'training_time', 'roc_auc']
     
     # Format numeric values with appropriate significant figures

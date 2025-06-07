@@ -1,11 +1,13 @@
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, roc_auc_score, RocCurveDisplay, ConfusionMatrixDisplay
+from sklearn.naive_bayes import MultinomialNB
 
-def run_baseline_model(df, column='cleaned_stop_lemma', label_column='label', test_size=0.2, random_state=42):
+def run_multinomial_nb_model(df, column='cleaned_stop_lemma', label_column='label', test_size=0.2, random_state=42):
     # Vectorize using TF-IDF
     vectorizer = TfidfVectorizer()
     X = vectorizer.fit_transform(df[column])
@@ -18,7 +20,7 @@ def run_baseline_model(df, column='cleaned_stop_lemma', label_column='label', te
     # Train model
     import time
     start_time = time.time()
-    model = LogisticRegression(max_iter=1000)
+    model = MultinomialNB()
     model.fit(X_train, y_train)
     training_time = time.time() - start_time
     print(f'Training Time: {training_time:.4f} seconds')
@@ -33,18 +35,18 @@ def run_baseline_model(df, column='cleaned_stop_lemma', label_column='label', te
     print(cm)
 
     ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['Ham', 'Spam']).plot(cmap='Blues')
-    plt.title(f'Confusion Matrix ({column})')
-    cf_save_path = f'data/baseline/baseline_{column}_cf.png'
+    plt.title(f'Confusion Matrix ({column}) - MultinomialNB')
+    cf_save_path = f'data/mnb/multinb_{column}_cf.png'
     plt.savefig(cf_save_path)
     print(f'Saved confusion matrix to {cf_save_path}')
     plt.close()
 
-    RocCurveDisplay.from_predictions(y_test, y_proba, name='Logistic Regression')
+    RocCurveDisplay.from_predictions(y_test, y_proba, name='MultinomialNB')
     plt.plot([0, 1], [0, 1], 'k--')
     plt.legend()
-    plt.title(f'ROC AUC Curve ({column})')
+    plt.title(f'ROC AUC Curve ({column}) - MultinomialNB')
     plt.grid(True)
-    roc_save_path = f'data/baseline/baseline_{column}_roc.png'
+    roc_save_path = f'data/mnb/mnb_{column}_roc.png'
     plt.savefig(roc_save_path)
     print(f'Saved ROC curve to {roc_save_path}')
     plt.close()
@@ -53,7 +55,7 @@ def run_baseline_model(df, column='cleaned_stop_lemma', label_column='label', te
     misclassified_ham = test_df[(y_test == 0) & (y_pred == 1)][column].tolist()
 
     metrics = {
-        'model': 'Baseline',
+        'model': 'MultinomialNB',
         'variant': f'{column}',
         'accuracy': accuracy_score(y_test, y_pred),
         'precision': precision_score(y_test, y_pred),

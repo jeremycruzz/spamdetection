@@ -7,7 +7,6 @@ import pandas as pd
 
 
 def plot_message_lengths(df, column="message", label_column="label", save_path=None, title = None):
-    import numpy as np
     spam_lengths = df[df[label_column] == 'spam'][column].str.len()
     ham_lengths = df[df[label_column] == 'ham'][column].str.len()
 
